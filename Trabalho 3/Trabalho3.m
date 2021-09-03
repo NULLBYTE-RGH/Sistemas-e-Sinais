@@ -1,50 +1,48 @@
-%%% Incia o ambiente matlab para uma sessão de análises
+%%% Incia o ambiente matlab para uma sessÃ£o de anÃ¡lises
 clear; clc; close all;
 
-pkg load signal;
-pkg load control;
 %%% Carrega o trabalho feito anteriormente e gravado no arquivo Voz.mat
 load('Voz.mat') 
 
 
-% Cria uma figura para a análise temporal
+% Cria uma figura para a anÃ¡lise temporal
 plot(t,Vp);
 title('Sinal de voz para a vogal a');
 xlabel('Tempo em s');
-ylabel('Tensão em Volts'); 
+ylabel('TensÃ£o em Volts'); 
 grid minor
-%%% modifica parâmetros do gráfico
+%%% modifica parÃ¢metros do grÃ¡fico
 set(findall(gcf,'Type','line'),'LineWidth',3);
 set(gca,'FontSize',14,'LineWidth',2);
 
 
-% Cria uma figura para a análise em frequência
+% Cria uma figura para a anÃ¡lise em frequÃªncia
 plot(frequencia,Y0);
 title('Espectro de amplitude da vogal a');
-xlabel('Frequência em Hz');
+xlabel('FrequÃªncia em Hz');
 ylabel('Magnitude em dB'); 
 grid minor
 
 set(findall(gcf,'Type','line'),'LineWidth',3);
 set(gca,'FontSize',14,'LineWidth',2);
 
-%%% Analisando os parâmteros graficamente
-ti = 0.001126;  % começo do primeiro período inteiro
-tf = 0.09537;   % fim do último período inteiro
-T = (tf-ti)/13; % valor médio dentre os 13 períodos
-f = inv(T);     % frequência associada a vibração gerada
+%%% Analisando os parÃ¢mteros graficamente
+ti = 0.001126;  % comeÃ§o do primeiro perÃ­odo inteiro
+tf = 0.09537;   % fim do Ãºltimo perÃ­odo inteiro
+T = (tf-ti)/13; % valor mÃ©dio dentre os 13 perÃ­odos
+f = inv(T);     % frequÃªncia associada a vibraÃ§Ã£o gerada
 findpeaks(Vp,t,'MinPeakDistance',0.001);
 [vt,tp]=findpeaks(Vp,t,'MinPeakDistance',0.001);
 Tm =mean(diff(tp));
 title('Sinal de voz para a vogal a');
 xlabel('Tempo em s');
-ylabel('Tensão em Volts'); 
+ylabel('TensÃ£o em Volts'); 
 grid minor
 
 
 findpeaks(Y0,frequencia,'MinPeakDistance',0.9*f);
 title('Espectro de amplitude da vogal a');
-xlabel('Frequência em Hz');
+xlabel('FrequÃªncia em Hz');
 ylabel('Magnitude em dB'); 
 grid minor
 
@@ -60,7 +58,7 @@ H(6) = 800;
 H(7) = 940;
 H(8) = 1070;
 delta  =  diff(H);
-%%% Valor médio da harmônica
+%%% Valor mÃ©dio da harmÃ´nica
 Hm = mean(delta);
 %%%% Formantes
 FRM(1) = 670;
@@ -71,7 +69,7 @@ findpeaks(diff(Vp),t(1:end-1),'MinPeakDistance',0.001,'MinPeakDistance',0.005);
 [vt,ip] = findpeaks(diff(Vp),t(1:end-1),'MinPeakDistance',0.001,'MinPeakDistance',0.005);
 title('Sinal de voz para a vogal a');
 xlabel('Tempo em s');
-ylabel('Tensão em Volts'); 
+ylabel('TensÃ£o em Volts'); 
 grid minor
 
 
@@ -80,16 +78,28 @@ fim    =  find(t==ip(4));
 plot(t(inicio:fim),Vp(inicio:fim));
 title('Sinal de voz para a vogal a');
 xlabel('Tempo em s');
-ylabel('Tensão em Volts'); 
+ylabel('TensÃ£o em Volts'); 
 grid 
 
 
 X = t(inicio:fim) - t(inicio);
 Y = Vp(inicio:fim);
 [vexp,texp] = findpeaks(Y,X,'MinPeakDistance',0.001);
-f = fit(texp(1:3)',vexp(1:3),'exp1')
+f = fit(texp(1:3)',vexp(1:3),'exp1');
 
 plot(f,texp(1:3)',vexp(1:3))
+
+
+
+% EXP = 
+% 
+%      General model Exp1:
+%      EXP(x) = a*exp(b*x)
+%      Coefficients (with 95% confidence bounds):
+%        a =   1.054e+04  (-1.014e+05, 1.225e+05)
+%        b =      -575.8  (-1290, 138.8)
+% 
+
 
 x=[0 2.851 -575 730]';
 % Plot the original and experimental data.
@@ -99,18 +109,17 @@ Y_new =  x(1) + x(2).*exp(x(3).*X).*sin(2*pi*x(4).*X)
 plot(X,Y,'+r',X,Y_new,'b')
 title('Sinal de voz para a vogal a');
 xlabel('Tempo em s');
-ylabel('Tensão em Volts'); 
+ylabel('TensÃ£o em Volts'); 
 grid 
 legend('Real','Ajustado')
 
 
-% Transformando a função temporal em uma função de laplace
+% Transformando a funÃ§Ã£o temporal em uma funÃ§Ã£o de laplace
 x=[0 2.851 -575 730]';
 Y_new =  x(1) + x(2).*exp(x(3).*X).*sin(2*pi*x(4).*X)
 
-
-clear('tf')                 % apaga a variável que impede o cálculod a função de transferência
-                            % no futuro melhor mudar o nome da variável
+clear('tf')                 % apaga a variÃ¡vel que impede o cÃ¡lculod a funÃ§Ã£o de transferÃªncia
+                            % no futuro melhor mudar o nome da variÃ¡vel
 k  = x(2)*2*pi*x(4);
 p1 = x(3) + j*2*pi*x(4);
 p2 = x(3) - j*2*pi*x(4);
@@ -156,7 +165,7 @@ pzmap(Gvoz);
 subplot(1,2,2)
 pzmap(Gvozd);
 
-% freqz função em Z
+% freqz funÃ§Ã£o em Z
 %H(z) * degrau = H(z) * z/(z-1) --> Z^(-1) --> tempo --> impulso --> Resposta
 
 
