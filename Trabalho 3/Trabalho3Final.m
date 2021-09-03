@@ -1,5 +1,5 @@
 %Trabalho T3
-% Joao Vitor Quirino Sarti 18.01224-8
+% Joao Vitor
 
 % a) Para a vogal A determinar a funcao de laplace  --> G(s)=N(s)/D(s)
 % b) Grafico de Laplace sobreposto com a vogal
